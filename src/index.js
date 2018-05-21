@@ -6,6 +6,7 @@ import { configureStore } from './app/store/configureStore';
 import 'semantic-ui-css/semantic.min.css';
 import './index.css';
 import App from './app/layout/App';
+import ScrollToTop from './app/common/utils/scroll-to-top';
 import registerServiceWorker from './registerServiceWorker';
 
 const rootEl = document.getElementById('root');
@@ -15,7 +16,9 @@ let render = () => {
 	ReactDOM.render(
 		<Provider store={store}>
 			<BrowserRouter>
-				<App />
+				<ScrollToTop>
+					<App />
+				</ScrollToTop>
 			</BrowserRouter>
 		</Provider>,
 		rootEl

@@ -15,11 +15,18 @@ class EventForm extends Component {
 		event: emptyEvent,
 	};
 
-	static getDerivedStateFromProps(nextProps) {
+	static getDerivedStateFromProps(nextProps, prevState) {
 		if (nextProps.selectedEvent) {
 			return {
 				event: {
 					...nextProps.selectedEvent,
+				},
+			};
+		}
+		if (!nextProps.selectedEvent) {
+			return {
+				event: {
+					...emptyEvent,
 				},
 			};
 		}
@@ -31,18 +38,6 @@ class EventForm extends Component {
 		state.event[event.target.name] = event.target.value;
 		this.setState({
 			...state,
-		});
-	};
-
-	onClearForm = () => {
-		this.setState({
-			event: {
-				title: '',
-				date: '',
-				city: '',
-				venue: '',
-				hostedBy: '',
-			},
 		});
 	};
 
@@ -58,8 +53,13 @@ class EventForm extends Component {
 			eventData.description = '';
 			eventData.attendees = [];
 		}
-		this.props.onSubmitForm(eventData);
-		this.onClearForm();
+		this.setState({
+			event: emptyEvent,
+		});
+		this.forceUpdate();
+		setTimeout(() => {
+			this.props.onSubmitForm(eventData);
+		}, 20);
 	};
 
 	render() {
