@@ -1,42 +1,14 @@
 import React, { Component } from 'react';
-import { Segment, Form, Button } from 'semantic-ui-react';
+import { Segment, Form, Button, Grid, Header } from 'semantic-ui-react';
+import { Field, reduxForm } from 'redux-form';
 import cuid from 'cuid';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { updateEvent, createEvent } from '../event-list/event-actions';
-
-const emptyEvent = {
-	title: '',
-	date: '',
-	city: '',
-	venue: '',
-	hostedBy: '',
-};
+import TextInput from '../../../app/common/form/text-input';
+import TextArea from '../../../app/common/form/text-area';
 
 class EventForm extends Component {
-	state = {
-		event: emptyEvent,
-	};
-
-	static getDerivedStateFromProps(nextProps, prevState) {
-		if (nextProps.event) {
-			return {
-				event: {
-					...nextProps.event,
-				},
-			};
-		}
-		return null;
-	}
-
-	onChange = event => {
-		const state = { ...this.state };
-		state.event[event.target.name] = event.target.value;
-		this.setState({
-			...state,
-		});
-	};
-
 	onSubmit = event => {
 		event.preventDefault();
 		const eventData = {
@@ -57,59 +29,45 @@ class EventForm extends Component {
 	};
 
 	render() {
-		const { event } = this.state;
 		return (
-			<Segment>
-				<Form onSubmit={this.onSubmit}>
-					<Form.Field>
-						<label>Event Title</label>
-						<input placeholder="Event title" name="title" value={event.title} onChange={this.onChange} />
-					</Form.Field>
-					<Form.Field>
-						<label>Event Date</label>
-						<input
-							type="date"
-							placeholder="Event Date"
-							name="date"
-							value={event.date}
-							onChange={this.onChange}
-						/>
-					</Form.Field>
-					<Form.Field>
-						<label>City</label>
-						<input
-							placeholder="City event is taking place"
-							name="city"
-							value={event.city}
-							onChange={this.onChange}
-						/>
-					</Form.Field>
-					<Form.Field>
-						<label>Venue</label>
-						<input
-							placeholder="Enter the Venue of the event"
-							value={event.venue}
-							name="venue"
-							onChange={this.onChange}
-						/>
-					</Form.Field>
-					<Form.Field>
-						<label>Hosted By</label>
-						<input
-							placeholder="Enter the name of person hosting"
-							name="hostedBy"
-							value={event.hostedBy}
-							onChange={this.onChange}
-						/>
-					</Form.Field>
-					<Button positive type="submit">
-						Submit
-					</Button>
-					<Button type="button" onClick={() => this.props.history.goBack()}>
-						Cancel
-					</Button>
-				</Form>
-			</Segment>
+			<Grid>
+				<Grid.Column width={10}>
+					<Segment>
+						<Form onSubmit={this.onSubmit}>
+							<Header sub color="teal" content="Event Details" />
+							<Field
+								name="title"
+								type="text"
+								component={TextInput}
+								placeholder="Give your event a name"
+							/>
+							<Field
+								name="category"
+								type="text"
+								component={TextInput}
+								placeholder="What is your event about?"
+							/>
+							<Field
+								name="description"
+								type="text"
+								component={TextArea}
+								placeholder="Tell us about your event"
+							/>
+							<Header sub color="teal" content="Event Location Details" />
+							<Field name="city" type="text" component={TextInput} placeholder="Event City" />
+							<Field name="venue" type="text" component={TextInput} placeholder="Event Venue" />
+							<Field name="date" type="date" component={TextInput} placeholder="Event Date" />
+
+							<Button positive type="submit">
+								Submit
+							</Button>
+							<Button type="button" onClick={() => this.props.history.goBack()}>
+								Cancel
+							</Button>
+						</Form>
+					</Segment>
+				</Grid.Column>
+			</Grid>
 		);
 	}
 }
@@ -139,4 +97,4 @@ const mapDispatchToProps = dispatch => ({
 	onCreate: event => dispatch(createEvent(event)),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EventForm));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'eventForm' })(EventForm)));
