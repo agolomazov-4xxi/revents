@@ -1,60 +1,74 @@
-import React, { Component } from 'react';
-import { Menu, Container, Button } from 'semantic-ui-react';
-import { NavLink, Link, withRouter } from 'react-router-dom';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {Menu, Container, Button} from 'semantic-ui-react';
+import {NavLink, Link, withRouter} from 'react-router-dom';
 import SignedOutMenu from '../menus/signed-out-menu';
 import SignedInMenu from '../menus/signed-in-menu';
+import {openModal} from '../../modals/modal-actions';
 
 class Navbar extends Component {
-	state = {
-		authenticated: false,
-	};
+  state = {
+    authenticated: false,
+  };
 
-	handleSignIn = () => {
-		this.setState({
-			authenticated: true,
-		});
-	};
+  handleSignIn = () => {
+    this.props.openModal('LoginModal');
+  };
 
-	handleSignOut = () => {
-		this.setState({
-			authenticated: false,
-		});
-		this.props.history.push('/');
-	};
+  handleRegister = () => {
+    this.props.openModal('RegisterModal');
+  };
 
-	render() {
-		const { authenticated } = this.state;
-		return (
-			<Menu inverted fixed="top">
-				<Container>
-					<Menu.Item as={NavLink} to="/" exact header>
-						<img src="/assets/logo.png" alt="logo" />
-						Re-vents
-					</Menu.Item>
-					<Menu.Item as={NavLink} to="/events" name="Events" />
-					{authenticated && <Menu.Item as={NavLink} to="/people" name="People" />}
-					{authenticated && (
-						<Menu.Item>
-							<Button
-								as={Link}
-								to="/create-event"
-								floated="right"
-								positive
-								inverted
-								content="Create Event"
-							/>
-						</Menu.Item>
-					)}
+  handleSignOut = () => {
+    this.setState({
+      authenticated: false,
+    });
+    this.props.history.push('/');
+  };
 
-					{authenticated ? (
-						<SignedInMenu signOut={this.handleSignOut} />
-					) : (
-						<SignedOutMenu signIn={this.handleSignIn} />
-					)}
-				</Container>
-			</Menu>
-		);
-	}
+  render() {
+    const {authenticated} = this.state;
+    const {openModal} = this.props;
+    return (
+      <Menu inverted fixed="top">
+        <Container>
+          <Menu.Item as={NavLink} to="/" exact header>
+            <img src="/assets/logo.png" alt="logo" />
+            Re-vents
+          </Menu.Item>
+          <Menu.Item as={NavLink} to="/events" name="Events" />
+          {authenticated && (
+            <Menu.Item as={NavLink} to="/people" name="People" />
+          )}
+          {authenticated && (
+            <Menu.Item>
+              <Button
+                as={Link}
+                to="/create-event"
+                floated="right"
+                positive
+                inverted
+                content="Create Event"
+              />
+            </Menu.Item>
+          )}
+
+          {authenticated ? (
+            <SignedInMenu signOut={this.handleSignOut} />
+          ) : (
+            <SignedOutMenu
+              signIn={this.handleSignIn}
+              register={this.handleRegister}
+            />
+          )}
+        </Container>
+      </Menu>
+    );
+  }
 }
 
-export default withRouter(Navbar);
+const mapDispatchToProps = dispatch => ({
+  openModal: (type, props) => dispatch(openModal(type, props)),
+});
+
+export default withRouter(connect(null, mapDispatchToProps)(Navbar));

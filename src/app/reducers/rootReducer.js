@@ -1,8 +1,10 @@
-import { combineReducers } from 'redux';
-import { reducer } from 'redux-form';
+import {combineReducers} from 'redux';
+import {reducer} from 'redux-form';
 import eventReducer from '../../features/event/event-list/event-reducer';
+import modalsReducer from '../../features/modals/modal-reducer';
 
 export default combineReducers({
-	events: eventReducer,
-	form: reducer,
+  events: eventReducer,
+  form: reducer,
+  modals: modalsReducer,
 });
