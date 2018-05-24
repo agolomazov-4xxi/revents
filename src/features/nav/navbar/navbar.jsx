@@ -5,12 +5,9 @@ import {NavLink, Link, withRouter} from 'react-router-dom';
 import SignedOutMenu from '../menus/signed-out-menu';
 import SignedInMenu from '../menus/signed-in-menu';
 import {openModal} from '../../modals/modal-actions';
+import {logout} from '../../auth/auth-actions';
 
 class Navbar extends Component {
-  state = {
-    authenticated: false,
-  };
-
   handleSignIn = () => {
     this.props.openModal('LoginModal');
   };
@@ -20,15 +17,12 @@ class Navbar extends Component {
   };
 
   handleSignOut = () => {
-    this.setState({
-      authenticated: false,
-    });
+    this.props.logout();
     this.props.history.push('/');
   };
 
   render() {
-    const {authenticated} = this.state;
-    const {openModal} = this.props;
+    const {auth} = this.props;
     return (
       <Menu inverted fixed="top">
         <Container>
@@ -37,10 +31,10 @@ class Navbar extends Component {
             Re-vents
           </Menu.Item>
           <Menu.Item as={NavLink} to="/events" name="Events" />
-          {authenticated && (
+          {auth.authenticated && (
             <Menu.Item as={NavLink} to="/people" name="People" />
           )}
-          {authenticated && (
+          {auth.authenticated && (
             <Menu.Item>
               <Button
                 as={Link}
@@ -53,8 +47,11 @@ class Navbar extends Component {
             </Menu.Item>
           )}
 
-          {authenticated ? (
-            <SignedInMenu signOut={this.handleSignOut} />
+          {auth.authenticated ? (
+            <SignedInMenu
+              currentUser={auth.currentUser}
+              signOut={this.handleSignOut}
+            />
           ) : (
             <SignedOutMenu
               signIn={this.handleSignIn}
@@ -67,8 +64,13 @@ class Navbar extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  openModal: (type, props) => dispatch(openModal(type, props)),
+const mapStateToProps = state => ({
+  auth: state.auth,
 });
 
-export default withRouter(connect(null, mapDispatchToProps)(Navbar));
+const mapDispatchToProps = dispatch => ({
+  openModal: (type, props) => dispatch(openModal(type, props)),
+  logout: () => dispatch(logout()),
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Navbar));
