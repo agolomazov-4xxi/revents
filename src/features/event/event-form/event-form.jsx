@@ -14,7 +14,7 @@ import cuid from 'cuid';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import {geocodeByAddress, getLatLng} from 'react-places-autocomplete';
-import {updateEvent, createEvent} from '../event-list/event-actions';
+import {updateEvent, createEvent} from '../event-actions';
 import TextInput from '../../../app/common/form/text-input';
 import TextArea from '../../../app/common/form/text-area';
 import SelectInput from '../../../app/common/form/select-input';
