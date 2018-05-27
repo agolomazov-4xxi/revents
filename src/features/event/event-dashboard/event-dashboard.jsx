@@ -8,9 +8,6 @@ import LoadingComponent from '../../../app/layout/LoadingComponent';
 class EventDashboard extends Component {
   handleDeleteEvent = id => {
     this.props.deleteEvent(id);
-    this.setState({
-      isOpen: false,
-    });
   };
 
   render() {

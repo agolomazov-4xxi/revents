@@ -47,7 +47,6 @@ export const loadEvents = () => {
       dispatch(fetchEvents(events.events));
       dispatch(asyncActionFinish());
     } catch (error) {
-      console.log(error);
       dispatch(asyncActionError());
     }
   };
