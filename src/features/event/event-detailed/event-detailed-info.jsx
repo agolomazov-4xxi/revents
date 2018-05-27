@@ -1,11 +1,18 @@
 import React, {Component} from 'react';
 import {Segment, Grid, Icon, Button} from 'semantic-ui-react';
 import EventDetailedMap from './event-detailed-map';
+import format from 'date-fns/format';
 
 class EventDetailedInfo extends Component {
   state = {
     showMap: false,
   };
+
+  componentWillUnmount() {
+    this.setState({
+      showMap: false,
+    });
+  }
 
   showMapToggle = () => {
     this.setState(prevState => ({
@@ -14,7 +21,9 @@ class EventDetailedInfo extends Component {
   };
 
   render() {
-    const {event} = this.props;
+    const {
+      event: {description, date, venue, venueLatLng},
+    } = this.props;
     const {showMap} = this.state;
     return (
       <Segment.Group>
@@ -24,7 +33,7 @@ class EventDetailedInfo extends Component {
               <Icon size="large" color="teal" name="info" />
             </Grid.Column>
             <Grid.Column width={15}>
-              <p>{event.description}</p>
+              <p>{description}</p>
             </Grid.Column>
           </Grid>
         </Segment>
@@ -34,7 +43,9 @@ class EventDetailedInfo extends Component {
               <Icon name="calendar" size="large" color="teal" />
             </Grid.Column>
             <Grid.Column width={15}>
-              <span>{event.date}</span>
+              <span>
+                {format(date, 'dddd Do MMMM')} at {format(date, 'HH:mm')}
+              </span>
             </Grid.Column>
           </Grid>
         </Segment>
@@ -44,7 +55,7 @@ class EventDetailedInfo extends Component {
               <Icon name="marker" size="large" color="teal" />
             </Grid.Column>
             <Grid.Column width={11}>
-              <span>{event.venue}</span>
+              <span>{venue}</span>
             </Grid.Column>
             <Grid.Column width={4}>
               <Button
@@ -58,8 +69,8 @@ class EventDetailedInfo extends Component {
         </Segment>
         {showMap && (
           <EventDetailedMap
-            lat={event.venueLatLng.lat}
-            lng={event.venueLatLng.lng}
+            lat={venueLatLng.lat}
+            lng={venueLatLng.lng}
             zoom={14}
           />
         )}
