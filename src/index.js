@@ -9,12 +9,10 @@ import ReduxToastr from 'react-redux-toastr';
 import './index.css';
 import App from './app/layout/App';
 import ScrollToTop from './app/common/utils/scroll-to-top';
-import {loadEvents} from './features/event/event-actions';
 import registerServiceWorker from './registerServiceWorker';
 
 const rootEl = document.getElementById('root');
 const store = configureStore();
-store.dispatch(loadEvents());
 
 let render = () => {
   ReactDOM.render(
